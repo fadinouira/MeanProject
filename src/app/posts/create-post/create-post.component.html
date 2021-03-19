@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-form-field  class="example-full-width">
+    <mat-label>Title</mat-label>
+    <input matInput  [(ngModel)]="enteredTitle">
+  </mat-form-field>
+  <mat-form-field  class="example-full-width">
+    <mat-label>Write a post</mat-label>
+    <textarea rows="6" matInput placeholder="Ex. It makes me feel..." [(ngModel)]="enteredText"></textarea>
+  </mat-form-field>
+  <button mat-raised-button color="primary"  (click)="onAdd()">Save</button>
+</mat-card>
+
+
+
+
+
+
