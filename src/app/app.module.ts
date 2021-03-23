@@ -15,6 +15,8 @@ import {MatTableModule} from '@angular/material/table';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 
 // Components Imports
@@ -52,6 +54,7 @@ import { EditPostComponent } from './posts/edit-post/edit-post.component';
     HttpClientModule,
     MatListModule,
     MatSidenavModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -4,7 +4,7 @@
 
     <mat-form-field  class="example-full-width">
       <mat-label>Title</mat-label>
-      <input matInput  name="title" ngModel required>
+      <input matInput  name="title" [ngModel]="post.title" required>
       <mat-error>A post must have a title</mat-error>
     </mat-form-field>
 
@@ -12,13 +12,13 @@
 
     <mat-form-field  class="example-full-width">
       <mat-label>Write a post</mat-label>
-      <textarea rows="6" matInput placeholder="Ex. It makes me feel..." name="content" ngModel required></textarea>
+      <textarea rows="6" matInput placeholder="Ex. It makes me feel..." name="content" [ngModel]="post.content" required></textarea>
       <mat-error>A post can't be empty</mat-error>
     </mat-form-field>
 
     <br><br>
 
-    <button mat-raised-button color="primary"  type="submit">Save</button>
+    <button mat-raised-button color="primary"  type="submit">{{this.mode}}</button>
 
   </form>
 

@@ -7,7 +7,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 
 const routes: Routes = [
   { path : '' , component : PostListComponent },
-  { path : 'edit-post' , component : EditPostComponent },
+  { path : 'edit-post/:id' , component : CreatePostComponent },
   { path : 'create-post' , component : CreatePostComponent }
 ];
 

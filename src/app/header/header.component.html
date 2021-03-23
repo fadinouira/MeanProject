@@ -2,11 +2,11 @@
   <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
-  <span><a routerLink="">My App</a></span>
+  <span><a routerLink="">My Posts</a></span>
+  <span class="space"></span>
   <ul>
     <li>
-      <a routerLink="">Posts List</a>
-      <a routerLink="create-post">Add List</a>
+      <a mat-button routerLink="create-post" routerLinkActive="mat-accent">Add Post</a>
     </li>
   </ul>
 </mat-toolbar>
