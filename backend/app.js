@@ -1,7 +1,17 @@
 const exp = require('express') ;
 const bodeyParser = require('body-parser') ;
+const mongoose = require('mongoose') ;
+const Post = require('./models/post');
 
 const app = exp();
+
+mongoose.connect('mongodb+srv://root:fedifedi@meanapp.38mzd.mongodb.net/MeanDB', {useNewUrlParser: true, useUnifiedTopology: true})
+.then(()=> {
+  console.log("connected successfully !");
+})
+.catch(()=> {
+  console.log("connection failed !");
+})
 
 app.use(bodeyParser.json());
 
@@ -16,7 +26,11 @@ app.use((req,res,next)=> {
 
 
 app.post('/api/posts',(req,res,next)=> {
-  const post = req.body ;
+  const post = new Post({
+    title : req.body.title,
+    content : req.body.content
+  }) ;
+  post.save();
   console.log(post);
   res.status(201).json({
     message : "post added succesfully"
@@ -24,32 +38,15 @@ app.post('/api/posts',(req,res,next)=> {
 })
 
 app.get('/api/posts',(req,res,next)=> {
-  const post = {
-    id : "1",
-    title : "fedi",
-    content : "hey"
-  }
-  const post1 = {
-    id : "2",
-    title : "akrem",
-    content : "hey fedi your server is perfect"
-  }
-  const post2 = {
-    id : "3",
-    title : "ghassen",
-    content : "this server is sooo good !"
-  }
+  Post.find()
+    .then(documents => {
+      res.status(200).json({
+        message : "result from server:",
+        posts: documents
+      });
+    })
+    .catch();
 
-  const posts = [];
-
-  posts.push(post);
-  posts.push(post1);
-  posts.push(post2);
-
-  res.status(200).json({
-    message : "result from server:",
-    posts: posts
-  });
 
 });
 
