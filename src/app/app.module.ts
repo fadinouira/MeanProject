@@ -13,12 +13,16 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTableModule} from '@angular/material/table';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
 
 // Components Imports
 import { AppComponent } from './app.component';
 import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
+import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 //Services Imports
 
@@ -29,7 +33,8 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     AppComponent,
     CreatePostComponent,
     HeaderComponent,
-    PostListComponent
+    PostListComponent,
+    EditPostComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +49,9 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     MatIconModule,
     MatTableModule,
     MatExpansionModule,
-    HttpClientModule
+    HttpClientModule,
+    MatListModule,
+    MatSidenavModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

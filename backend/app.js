@@ -37,9 +37,7 @@ app.post('/api/posts',(req,res,next)=> {
       id : result._id
     });
   });
-  res.status(201).json({
-    message : "post added succesfully"
-  });
+
 })
 
 app.get('/api/posts',(req,res,next)=> {
