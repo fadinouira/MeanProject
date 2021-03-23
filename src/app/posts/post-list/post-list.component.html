@@ -19,7 +19,7 @@
       <button mat-button color="warn" (click)="onDelete(p.id)">DELETE</button>
     </mat-action-row>
   </mat-expansion-panel>
-  <p class="info-text mat-body-strong primary" *ngIf="posts.length == 0">
+  <p class="info-text mat-body-strong primary" *ngIf="posts.length == 0 && !isLoading">
 
       No Posts yet
 

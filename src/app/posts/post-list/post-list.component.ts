@@ -39,7 +39,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id : string){
+    this.isLoading = true;
     this.postService.deletePost(id);
+    this.isLoading = false;
   }
 
 }

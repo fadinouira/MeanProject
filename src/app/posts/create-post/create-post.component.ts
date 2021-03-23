@@ -1,7 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { from } from 'rxjs';
 import { Post } from '../post.model' ;
 import { PostService } from '../posts.service';
 
@@ -17,16 +16,19 @@ export class CreatePostComponent implements OnInit {
   public mode ='';
   private id : string ;
   public post : Post ;
+  public isLoading : boolean;
 
 
   constructor(public postService : PostService, public route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap : ParamMap)=> {
+      this.isLoading = true;
       if(paramMap.has('id')) {
         this.mode = 'EDIT';
         this.id = paramMap.get('id');
         this.post = this.postService.getPost(this.id);
+        this.isLoading = false;
       }
       else {
         this.mode = 'CREATE';
@@ -36,6 +38,7 @@ export class CreatePostComponent implements OnInit {
           title:"",
           content:""
         }
+        this.isLoading = false;
       }
     });
   }
@@ -44,7 +47,7 @@ export class CreatePostComponent implements OnInit {
     if(form.invalid){
       return ;
     }
-
+    this.isLoading = true;
     if(this.mode == 'CREATE') {
       const post : Post = {
         id: null,

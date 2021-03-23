@@ -1,6 +1,9 @@
-<mat-card>
+<div class="spinner" *ngIf="isLoading">
+  <mat-progress-spinner class="spinner" mode="indeterminate" color="accent"></mat-progress-spinner>
+</div>
+<mat-card *ngIf="!isLoading">
 
-  <form (ngSubmit)="onAdd(createPostFrom)" #createPostFrom="ngForm">
+  <form (ngSubmit)="onAdd(createPostFrom)" #createPostFrom="ngForm" >
 
     <mat-form-field  class="example-full-width">
       <mat-label>Title</mat-label>
