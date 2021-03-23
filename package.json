@@ -24,6 +24,7 @@
     "@angular/router": "~11.2.5",
     "arraylist": "^0.1.0",
     "body-parser": "^1.19.0",
+    "mongoose": "^5.12.2",
     "nodemon": "^2.0.7",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
