@@ -34,10 +34,22 @@ export class PostService {
     return this.postsUpdated.asObservable();
   }
 
+  deletePost(id :string) {
+    this.http.delete<{message : string}>('http://localhost:3200/api/posts/'+id)
+    .subscribe((res)=>{
+      console.log(res.message);
+      this.posts = this.posts.filter(post => post.id !== id);
+      this.postsUpdated.next([...this.posts]);
+    });
+    console.log()
+  }
+
   addPost(post : Post){
-    this.http.post<{message : String }>('http://localhost:3200/api/posts', post)
+    this.http.post<{message : string,id : string }>('http://localhost:3200/api/posts', post)
     .subscribe((response)=>{
       console.log(response.message);
+      this.getPosts();
+      post.id = response.id ;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
     });
