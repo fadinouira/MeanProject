@@ -13,6 +13,13 @@
 
     <br><br>
 
+    <div>
+      <button mat-stroked-button type="button" (click)="filePicker.click()">Choose file</button>
+      <input type="file" hidden #filePicker>
+    </div>
+
+    <br><br>
+
     <mat-form-field  class="example-full-width">
       <mat-label>Write a post</mat-label>
       <textarea rows="6" matInput placeholder="Ex. It makes me feel..." name="content" [ngModel]="post.content" required></textarea>
