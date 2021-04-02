@@ -60,12 +60,16 @@ export class PostService {
     })
   }
 
-  addPost(post : Post){
-    this.http.post<{message : string,id : string }>('http://localhost:3200/api/posts', post)
+  addPost(post : Post , image : File){
+    const postData = new FormData();
+    postData.append("title" , post.title);
+    postData.append("content" , post.content);
+    postData.append("image" , image , post.title);
+    this.http.post<{message : string,post : Post }>('http://localhost:3200/api/posts', postData)
     .subscribe((response)=>{
       console.log(response.message);
       this.getPosts();
-      post.id = response.id ;
+      post = response.post ;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
       this.router.navigate(["/"]);

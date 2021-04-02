@@ -13,6 +13,7 @@ mongoose.connect('mongodb+srv://root:fedifedi@meanapp.38mzd.mongodb.net/MeanDB',
 })
 
 app.use(bodeyParser.json());
+app.use(bodeyParser.urlencoded({ extended: false}));
 
 app.use((req,res,next)=> {
   res.setHeader('Access-Control-Allow-Origin',"*");
