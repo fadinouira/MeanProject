@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
   filename: (req,file,cb) => {
     const name = file.originalname.toLowerCase().split(' ').join('-');
     const text = MIME_TYPE_MAP[file.mimetype];
-    cb(null,name + '-' + Date.now() + '-' + text);
+    cb(null,name + '-' + Date.now() + '.' + text);
   }
 });
 
@@ -35,7 +35,6 @@ router.post("",multer({storage : storage}).single("image"),(req,res,next)=> {
     imagePath : url + "/images/" + req.file.filename
   }) ;
   post.save().then(result => {
-    console.log(result._id);
     res.status(201).json({
       message : "post added succesfully",
       post : {
@@ -51,13 +50,27 @@ router.post("",multer({storage : storage}).single("image"),(req,res,next)=> {
 
 
 
-router.put("/:id", (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  console.log(post);
+router.put("/:id",multer({storage : storage}).single("image"), (req, res, next) => {
+  const url = req.protocol + '://' + req.get("host") ;
+  let post ;
+  if(req.body.imagePath != ""){
+
+    post = new Post({
+      _id: req.params.id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath : req.body.imagePath
+    });
+  }
+  else {
+    post = new Post({
+      _id: req.params.id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath : url + "/images/" + req.file.filename
+    });
+  }
+
   Post.updateOne({ _id: req.params.id }, post).then(result => {
     console.log(result);
     res.status(200).json({ message: "Update successful!" });
@@ -65,15 +78,33 @@ router.put("/:id", (req, res, next) => {
 });
 
 router.get('',(req,res,next)=> {
-  Post.find()
+  console.log(req.query);
+  const pageSize = +req.query.pageSize ;
+  const currentPage = +req.query.currentPage ;
+  const postQuery = Post.find() ;
+  let fetchedPosts;
+  if(pageSize && currentPage) {
+    postQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+
+  postQuery
     .then(documents => {
-      res.status(200).json({
-        message : "result from server:",
-        posts: documents
-      });
+      fetchedPosts = documents ;
+      return Post.count();
     })
+      .then(count => {
+        res.status(200).json({
+          message : "result from server:",
+          posts: fetchedPosts,
+          maxPages : count
+        });
+      })
     .catch();
 });
+
+
 
 router.delete('/:id',(req,res,next) => {
   Post.deleteOne({_id : req.params.id}).then(()=>{

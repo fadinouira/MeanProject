@@ -10,29 +10,42 @@ import { Router } from '@angular/router';
 export class PostService {
   private posts : Post[] = [] ;
   private postsUpdated = new Subject<Post[]>();
+  private maxPosts : number ;
+  private maxPostsUpdated = new Subject<number>();
 
   constructor(private http : HttpClient, private router : Router){
 }
 
-  getPosts() {
-    this.http.get<{message : String , posts : any}>('http://localhost:3200/api/posts')
+  getPosts(pageSize : number , currentPage : number) {
+    const queryParams = "?pageSize="+pageSize+"&currentPage="+currentPage;
+    this.http.get<{message : String , posts : any ,maxPages : number}>('http://localhost:3200/api/posts'+ queryParams)
     .pipe(map((postData) => {
-      return postData.posts.map(post => {
+      return {
+        maxPages : postData.maxPages ,
+        posts : postData.posts.map(post => {
         return {
           title : post.title,
           content : post.content,
-          id : post._id
+          id : post._id,
+          imagePath : post.imagePath
         }
-      });
+      })};
     }))
     .subscribe((posts)=>{
-      this.posts = posts ;
+      this.posts = posts.posts ;
       this.postsUpdated.next([...this.posts]);
+      this.maxPosts = posts.maxPages ;
+      this.maxPostsUpdated.next(this.maxPosts);
     });
+
   }
 
   getPostsListener(){
     return this.postsUpdated.asObservable();
+  }
+
+  getMaxPostsListener(){
+    return this.maxPostsUpdated.asObservable();
   }
 
   deletePost(id :string) {
@@ -46,16 +59,40 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return {...this.posts.find(p => p.id == id)};
+    const post = {...this.posts.find(p => p.id == id)};
+    console.log("this is the post");
+    console.log(post);
+    return post ;
   }
 
-  updatePost(post : Post){
-    console.log(post.id);
+  updatePost(post : Post,image : File | string){
+    let postData : Post | FormData ;
+    if(typeof(image) == 'object') {
+      console.log("post data is image");
+      postData = new FormData();
+      postData.append("title" , post.title);
+      postData.append("content" , post.content);
+      postData.append("image" , image , post.title);
+      console.log("this is the post data");
+      console.log(postData);
+    }
+    else {
+      console.log("post data is a string");
+      postData  = {
+        id : post.id,
+        title : post.title,
+        content : post.content,
+        imagePath : image
+      }
+    }
+    console.log("this is the post data");
+    console.log(postData);
     var id : string  ;
     id = post.id ;
-    this.http.put<{message : string}>('http://localhost:3200/api/posts/'+ id,post)
+    this.http.put<{message : string}>('http://localhost:3200/api/posts/'+ id,postData)
     .subscribe((res) => {
       console.log(res.message);
+      this.getPosts(5,1);
       this.router.navigate(["/"]);
     })
   }
@@ -68,7 +105,8 @@ export class PostService {
     this.http.post<{message : string,post : Post }>('http://localhost:3200/api/posts', postData)
     .subscribe((response)=>{
       console.log(response.message);
-      this.getPosts();
+      console.log(response.post.imagePath);
+      this.getPosts(5,1);
       post = response.post ;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);

@@ -69,6 +69,11 @@ export class CreatePostComponent implements OnInit {
         this.id = paramMap.get('id');
         this.post = this.postService.getPost(this.id);
         this.isLoading = false;
+        this.form.setValue({
+          title : this.post.title,
+          content : this.post.content,
+          image : this.post.imagePath
+        })
       }
       else {
         this.mode = 'CREATE';
@@ -109,7 +114,8 @@ export class CreatePostComponent implements OnInit {
         content: this.form.value.content,
         imagePath : null
       }
-      this.postService.updatePost(post);
+      console.log(this.form.value.image);
+      this.postService.updatePost(post,this.form.value.image);
     }
     this.form.reset();
 

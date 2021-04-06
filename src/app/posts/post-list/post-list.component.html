@@ -11,6 +11,11 @@
       <mat-panel-description>
       </mat-panel-description>
     </mat-expansion-panel-header>
+    <div class="image-div">
+      <img mat-expansion-image class="image" [alt]="p.title" [src]="p.imagePath">
+    </div>
+
+
     <div >
       <p  >{{p.content}}</p>
     </div>
@@ -19,6 +24,10 @@
       <button mat-button color="warn" (click)="onDelete(p.id)">DELETE</button>
     </mat-action-row>
   </mat-expansion-panel>
+
+  <mat-paginator class="paginator" [length]="this.totalPosts" [pageSize]="this.postPerPage" [pageSizeOptions]="this.pageSizeOption" [pageIndex]="this.currentPage - 1" (page)="onChangePage($event)" >
+  </mat-paginator>
+
   <p class="info-text mat-body-strong primary" *ngIf="posts.length == 0 && !isLoading">
 
       No Posts yet
