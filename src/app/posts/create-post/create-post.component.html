@@ -1,44 +1,50 @@
+<br>
 <div class="spinner" *ngIf="isLoading">
   <mat-progress-spinner class="spinner" mode="indeterminate" color="accent"></mat-progress-spinner>
 </div>
-<mat-card *ngIf="!isLoading">
+<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-  <form [formGroup]="form" (ngSubmit)="onAdd()" >
+  <mat-card class="box" *ngIf="!isLoading">
 
-    <mat-form-field  class="example-full-width">
-      <mat-label>Title</mat-label>
-      <input matInput  name="title" formControlName="title" >
-      <mat-error *ngIf="form.get('title').invalid">A post must have a title</mat-error>
-    </mat-form-field>
+    <mat-card-header>
+      <mat-card-title>{{this.mode}} POST</mat-card-title>
+    </mat-card-header>
 
-    <br><br>
+    <form class="example-form" [formGroup]="form" (ngSubmit)="onAdd()" >
+      <mat-card-content>
+        <mat-form-field  class="example-full-width">
+          <mat-label>Title</mat-label>
+          <input matInput  name="title" formControlName="title" >
+          <mat-error *ngIf="form.get('title').invalid">A post must have a title</mat-error>
+        </mat-form-field>
 
-    <div>
-      <button mat-stroked-button type="button" (click)="filePicker.click()">Choose file</button>
-      <input type="file" hidden #filePicker (change)="onImagePicked($event)">
-      <mat-error *ngIf="form.get('image').invalid && this.clicked ">Must select an Image</mat-error>
-    </div>
+        <br><br>
 
-    <div class="image-preview" *ngIf="imgUrl != '' && imgUrl != NULL && form.get('image').valid">
-      <img class="image-preview-img" [src]="imgUrl" [alt]="form.value.title" (click)="filePicker.click()">
-    </div>
+        <div >
+          <button mat-stroked-button type="button"  class="btn-block" (click)="filePicker.click()">Choose file</button>
+          <input type="file" hidden #filePicker (change)="onImagePicked($event)">
+          <mat-error *ngIf="form.get('image').invalid && this.clicked ">Must select an Image</mat-error>
+        </div>
 
+        <div class="image-preview " *ngIf="imgUrl != '' && imgUrl != NULL && form.get('image').valid">
+          <img class="image-preview-img" [src]="imgUrl" [alt]="form.value.title" (click)="filePicker.click()">
+        </div>
 
-    <mat-form-field  class="example-full-width">
-      <mat-label>Write a post</mat-label>
-      <textarea rows="6" matInput placeholder="Ex. It makes me feel..." name="content" formControlName="content" ></textarea>
-      <mat-error *ngIf="form.get('content').invalid">A post can't be empty</mat-error>
-    </mat-form-field>
-
-    <br><br>
-
-    <button mat-raised-button color="primary"  type="submit">{{this.mode}}</button>
-
-  </form>
-
-</mat-card>
+        <br>
 
 
+        <mat-form-field  class="example-full-width">
+          <mat-label>Write a post</mat-label>
+          <textarea rows="6" matInput placeholder="Ex. It makes me feel..." name="content" formControlName="content" ></textarea>
+          <mat-error *ngIf="form.get('content').invalid">A post can't be empty</mat-error>
+        </mat-form-field>
 
+      </mat-card-content>
 
+      <button mat-stroked-button color="primary" class="btn-block"  type="submit">{{this.mode}}</button>
+
+    </form>
+
+  </mat-card>
+</div>
 
