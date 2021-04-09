@@ -1,5 +1,5 @@
 const express = require('express');
-const user = require("../models/user");
+const User = require("../models/user");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
@@ -8,12 +8,11 @@ router.post("/signup",(req,res,next)=> {
   .then(hash => {
     const user = new User({
       email : req.body.email,
-      password : req.body.password,
+      password : hash,
       name : req.body.name,
       age : req.body.age
     });
-  });
-  user.save()
+    user.save()
     .then(result => {
       res.status(201).json({
         message : "user added successfully !",
@@ -21,11 +20,12 @@ router.post("/signup",(req,res,next)=> {
       });
     })
     .catch(err => {
+      console.log(err);
       res.status(500).json({
         error : err
       });
     });
-
+  });
 });
 
 
