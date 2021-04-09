@@ -2,7 +2,8 @@ const path = require("path");
 const exp = require('express') ;
 const bodeyParser = require('body-parser') ;
 const mongoose = require('mongoose') ;
-const postsRoutes = require('./routes/posts')
+const postsRoutes = require('./routes/posts');
+const usersRoutes = require('./routes/users');
 const app = exp();
 
 mongoose.connect('mongodb+srv://root:fedifedi@meanapp.38mzd.mongodb.net/MeanDB', {useNewUrlParser: true, useUnifiedTopology: true})
@@ -27,8 +28,7 @@ app.use((req,res,next)=> {
 });
 
 app.use('/api/posts',postsRoutes);
-
-
+app.use('/api/users',usersRoutes);
 
 
 module.exports = app;
