@@ -9,13 +9,13 @@ import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({providedIn: 'root'})
 export class UserService {
-  private users : User[] = [] ;
-  private postsUpdated = new Subject<User[]>();
-  private maxUsers : number ;
-  private maxUsersUpdated = new Subject<number>();
-
+  private token : string ;
   constructor(private http : HttpClient, private router : Router){
 }
+
+  getToken(){
+    return this.token ;
+  }
 
   addUser(user : User){
     this.http.post<{message : string}>('http://localhost:3200/api/users/signup',user)
@@ -32,7 +32,8 @@ export class UserService {
     }
     this.http.post<{message : string, token : string}>('http://localhost:3200/api/users/login',req)
       .subscribe(response =>{
-        console.log(response);
+        this.token = response.token ;
+        console.log(this.token);
       });
   }
 

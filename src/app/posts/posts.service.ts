@@ -5,6 +5,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
+import { UserService } from '../auth/auth.service';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -12,9 +13,8 @@ export class PostService {
   private postsUpdated = new Subject<Post[]>();
   private maxPosts : number ;
   private maxPostsUpdated = new Subject<number>();
-
-  constructor(private http : HttpClient, private router : Router){
-}
+  private token ;
+  constructor(private http : HttpClient, private router : Router){}
 
   getPosts(pageSize : number , currentPage : number) {
     const queryParams = "?pageSize="+pageSize+"&currentPage="+currentPage;
