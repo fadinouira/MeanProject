@@ -5,6 +5,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
+import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({providedIn: 'root'})
 export class UserService {
@@ -17,15 +18,22 @@ export class UserService {
 }
 
   addUser(user : User){
-    this.http.post<{message : string,user : User }>('http://localhost:3200/api/users/signup',user)
+    this.http.post<{message : string}>('http://localhost:3200/api/users/signup',user)
     .subscribe((response)=>{
       console.log(response.message);
-      user = response.user ;
-      this.users.push(user);
-      this.postsUpdated.next([...this.users]);
       this.router.navigate(["/"]);
     });
+  }
 
+  logIn(email: string,password : string){
+    const req = {
+      email : email,
+      password : password
+    }
+    this.http.post<{message : string, token : string}>('http://localhost:3200/api/users/login',req)
+      .subscribe(response =>{
+        console.log(response);
+      });
   }
 
 
