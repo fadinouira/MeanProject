@@ -6,13 +6,19 @@
   <span class="space"></span>
   <ul>
     <li>
-      <a mat-button routerLink="create-post" routerLinkActive="mat-accent">Add Post</a>
+      <a mat-button *ngIf="userLogedIn" routerLink="create-post" routerLinkActive="mat-accent">Add Post</a>
     </li>
     <li>
-      <a mat-button routerLink="login" routerLinkActive="mat-accent" >Sign In</a>
+      <a mat-button *ngIf="!userLogedIn" routerLink="login" routerLinkActive="mat-accent" >Sign In</a>
     </li>
     <li>
-      <a mat-flat-button color="accent" routerLink="signup" routerLinkActive="active">Sign Up</a>
+      <a mat-flat-button *ngIf="!userLogedIn" color="accent" routerLink="signup" routerLinkActive="active">Sign Up</a>
+      <button *ngIf="userLogedIn" mat-flat-button color="accent" [matMenuTriggerFor]="beforeMenu">Profile</button>
+      <mat-menu #beforeMenu="matMenu" xPosition="after">
+        <button mat-menu-item>Profile</button>
+        <button mat-menu-item (click)="onSignOut()">Sign Out</button>
+      </mat-menu>
+
     </li>
   </ul>
 

@@ -10,11 +10,21 @@ import { stringify } from '@angular/compiler/src/util';
 @Injectable({providedIn: 'root'})
 export class UserService {
   private token : string ;
-  constructor(private http : HttpClient, private router : Router){
-}
+  private authStatusListener = new Subject<boolean>();
+  private authStatus = false ;
+  private tokenTimer : any ;
+  constructor(private http : HttpClient, private router : Router){}
 
   getToken(){
     return this.token ;
+  }
+
+  getAuthStatesListener(){
+    return this.authStatusListener ;
+  }
+
+  getAuthStatus(){
+    return this.authStatus;
   }
 
   addUser(user : User){
@@ -30,11 +40,28 @@ export class UserService {
       email : email,
       password : password
     }
-    this.http.post<{message : string, token : string}>('http://localhost:3200/api/users/login',req)
+    this.http.post<{message : string, token : string, expiresIn : number}>('http://localhost:3200/api/users/login',req)
       .subscribe(response =>{
         this.token = response.token ;
-        console.log(this.token);
+        if(this.token){
+          const expiresIn = response.expiresIn ;
+          this.tokenTimer = setTimeout(()=> {
+            this.signOut();
+          },expiresIn * 1000);
+          this.authStatusListener.next(true);
+          this.authStatus = true ;
+          this.router.navigate(['/']);
+        }
+
       });
+  }
+
+  signOut() {
+    this.token = null ;
+    this.authStatus = false ;
+    this.authStatusListener.next(false);
+    clearTimeout(this.tokenTimer);
+    this.router.navigate(['/']);
   }
 
 
