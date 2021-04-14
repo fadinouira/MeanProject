@@ -31,6 +31,7 @@ router.post("/signup",(req,res,next)=> {
 });
 
 router.post('/login',(req,res,next) => {
+  var connectedUser =  new User() ;
   User.findOne({email : req.body.email})
     .then(user => {
       if(!user) {
@@ -40,6 +41,9 @@ router.post('/login',(req,res,next) => {
         });
       }
       else {
+        connectedUser.name = user.name ;
+        connectedUser.email = user.email ;
+        connectedUser.age = user.age;
         return bcrypt.compare(req.body.password,user.password);
       }
     })
@@ -60,15 +64,17 @@ router.post('/login',(req,res,next) => {
           expiresIn : "1h"
         }
       );
+      console.log(connectedUser);
       res.status(200).json({
         message : "connected",
+        connectedUser,
         token,
-        expiresIn : "1h"
+        expiresIn : 3600
       })
 
     })
     .catch(err => {
-      console.log("auth failed");
+      console.log("auth failed: "+ err);
       return res.status(401).json({
         message : "auth failed !"
       });
