@@ -74,10 +74,14 @@ router.put("/:id",checkAuth,multer({storage : storage}).single("image"), (req, r
       imagePath : url + "/images/" + req.file.filename
     });
   }
+  Post.updateOne({ _id: req.params.id ,creator : req.userData.id}, post).then(result => {
+    if(result.nModified > 0){
+      res.status(200).json({ message: "Update successful!" });
+    }
+    else {
+      res.status(401).json({ message: "only the owner can modify this !" });
+    }
 
-  Post.updateOne({ _id: req.params.id }, post).then(result => {
-    console.log(result);
-    res.status(200).json({ message: "Update successful!" });
   });
 });
 
@@ -111,8 +115,14 @@ router.get('',(req,res,next)=> {
 
 
 router.delete('/:id',checkAuth,(req,res,next) => {
-  Post.deleteOne({_id : req.params.id}).then(()=>{
-    res.status(200).json({message : 'Post deleted !'});
+  Post.deleteOne({_id : req.params.id,creator : req.userData.id}).then((result)=>{
+    console.log(result);
+    if(result.deletedCount > 0){
+      res.status(200).json({ message:  'Post deleted !'});
+    }
+    else {
+      res.status(401).json({ message: "only the owner can delete this !" });
+    }
   });
 
 });

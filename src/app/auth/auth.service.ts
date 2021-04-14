@@ -13,6 +13,8 @@ export class UserService {
   private authStatusListener = new Subject<boolean>();
   private authStatus = false ;
   private tokenTimer : any ;
+  private connectedUser : string ;
+  private connectedUserListener = new Subject<string>();
   constructor(private http : HttpClient, private router : Router){}
 
   getToken(){
@@ -40,7 +42,7 @@ export class UserService {
       email : email,
       password : password
     }
-    this.http.post<{message : string,user : any, token : string, expiresIn : number}>('http://localhost:3200/api/users/login',req)
+    this.http.post<{message : string,connectedUser : any, token : string, expiresIn : number}>('http://localhost:3200/api/users/login',req)
       .subscribe(response =>{
         this.token = response.token ;
         if(this.token){
@@ -48,9 +50,11 @@ export class UserService {
           this.setAuthTimer(expiresIn);
           this.authStatusListener.next(true);
           this.authStatus = true ;
+          this.connectedUser = response.connectedUser.name ;
+          this.connectedUserListener.next(this.connectedUser);
           const now = new Date();
           const expDate = new Date(now.getTime() + expiresIn * 1000);
-          this.saveOfData(this.token,expDate);
+          this.saveOfData(this.token,expDate,this.connectedUser);
           this.router.navigate(['/']);
         }
 
@@ -88,13 +92,15 @@ export class UserService {
     },dur * 1000);
   }
 
-  private saveOfData(token : string ,expirationDate : Date){
+  private saveOfData(token : string ,expirationDate : Date,userName : string){
     localStorage.setItem('token', token);
+    localStorage.setItem('user', userName);
     localStorage.setItem('expirationDate',expirationDate.toISOString());
   }
 
   private clearAuthData() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('expirationDate');
   }
 
@@ -110,6 +116,17 @@ export class UserService {
     }
   }
 
+  public getUserName() : string {
+    const userName = localStorage.getItem("user");
+    if(userName){
+      return userName ;
+    }
+    return "";
+  }
+
+  public getUserNameListener(){
+    return this.connectedUserListener ;
+  }
 
 
 }
