@@ -56,15 +56,14 @@ router.post('/login',(req,res,next) => {
       }
       const token = jwt.sign(
         {
-        email : user.email,
-        id : user._id
+        email : connectedUser.email,
+        id : connectedUser._id
         },
-        "ksjdlkqjdaz_èçe_akejjh&éké&àskdjlksqjlkdqjs" ,
+        "mythicalshadows1996" ,
         {
           expiresIn : "1h"
         }
       );
-      console.log(connectedUser);
       res.status(200).json({
         message : "connected",
         connectedUser,

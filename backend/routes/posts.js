@@ -29,11 +29,14 @@ const storage = multer.diskStorage({
 
 router.post("",checkAuth,multer({storage : storage}).single("image"),(req,res,next)=> {
   const url = req.protocol + '://' + req.get("host") ;
+  console.log("this is the id "+req.userData.id);
   const post = new Post({
     title : req.body.title,
     content : req.body.content,
-    imagePath : url + "/images/" + req.file.filename
+    imagePath : url + "/images/" + req.file.filename,
+    creator : req.userData.id,
   }) ;
+  console.log(post);
   post.save().then(result => {
     res.status(201).json({
       message : "post added succesfully",
@@ -41,7 +44,8 @@ router.post("",checkAuth,multer({storage : storage}).single("image"),(req,res,ne
         id : result._id,
         title : result.title,
         content : result.content,
-        imagePath : result.imagePath
+        imagePath : result.imagePath,
+        creator : result.creator
       }
     });
   });
